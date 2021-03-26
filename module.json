@@ -1,0 +1,13 @@
+{
+    "name": "Activos",
+    "alias": "activos",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Activos\\Providers\\ActivosServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
