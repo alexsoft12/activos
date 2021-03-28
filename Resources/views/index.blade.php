@@ -1,9 +1,9 @@
-@extends('activos::layouts.master')
+@extends('layouts.app')
 
 @section('content')
-    <h1>Hello World</h1>
+    <!-- Content Header (Page header) -->
+    @include('activos::layouts.nav_activos')
 
-    <p>
-        This view is loaded from module: {!! config('activos.name') !!}
-    </p>
+    Dashboard
+
 @endsection

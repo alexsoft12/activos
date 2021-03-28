@@ -2,20 +2,43 @@
 
 namespace Modules\Activos\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Activos\Entities\Category;
+use Yajra\DataTables\Facades\DataTables;
 
-class ActivosController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
+     * @return Application|Factory|View|JsonResponse
      */
     public function index()
     {
-        return response()->view('activos::index');
+        if (request()->ajax()) {
+            $business_id = auth()->user()->business_id;
+
+            $category = Category::where('business_id', $business_id)
+                ->select(['name', 'short_code', 'description', 'id']);
+
+            return DataTables::eloquent($category)
+                ->addColumn(
+                    'action',
+                    '<button data-href="{{route(\'categories.edit\', [$id])}}" class="btn btn-xs btn-primary edit_category_button"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
+                        &nbsp;
+                        <button data-href="{{action(\'categories.destroy\', [$id])}}" class="btn btn-xs btn-danger delete_category_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
+                        '
+                )
+                ->removeColumn('id')
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('activos::category.index')->with(compact('module_category_data', 'module_category_data'));
     }
 
     /**
